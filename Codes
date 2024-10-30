@@ -10,29 +10,51 @@
             <TextBlock Text="Appointment Confirmation" FontSize="18" FontWeight="Bold" Margin="0,0,0,10"/>
             
             <TextBlock Text="Patient Name:"/>
-            <TextBox x:Name="PatientNameTextBox" Width="200"/>
-            
+            <TextBox Width="200"/>
+
             <TextBlock Text="Appointment Date:"/>
-            <DatePicker x:Name="AppointmentDatePicker" Width="200"/>
-            
+            <DatePicker Width="200"/>
+
             <TextBlock Text="Confirmation Status:"/>
-            <ComboBox x:Name="StatusComboBox" Width="200">
+            <ComboBox Width="200">
                 <ComboBoxItem Content="Confirmed"/>
                 <ComboBoxItem Content="Pending"/>
                 <ComboBoxItem Content="Cancelled"/>
             </ComboBox>
 
-            <Button Content="Send Update" Width="100" Height="30" Margin="0,10,0,0" Click="SendUpdateButton_Click"/>
+            <Button Content="Send Update" Width="100" Height="30" Margin="0,10,0,0"/>
 
-            <!-- DataGrid for displaying registered patients -->
+            <!-- DataGrid with Sample Data -->
             <TextBlock Text="Registered Patients" FontSize="16" FontWeight="Bold" Margin="0,20,0,5"/>
-            <DataGrid x:Name="PatientsDataGrid" AutoGenerateColumns="False" Height="200" Margin="0,10,0,0">
+            <DataGrid AutoGenerateColumns="False" Height="200" Margin="0,10,0,0">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Patient Name" Binding="{Binding PatientName}" Width="*"/>
-                    <DataGridTextColumn Header="Age" Binding="{Binding Age}" Width="*"/>
-                    <DataGridTextColumn Header="Date of Birth" Binding="{Binding DateOfBirth}" Width="*"/>
-                    <DataGridTextColumn Header="Slot" Binding="{Binding Slot}" Width="*"/>
+                    <DataGridTextColumn Header="Patient Name" Width="*" Binding="{Binding}"/>
+                    <DataGridTextColumn Header="Age" Width="*" Binding="{Binding}"/>
+                    <DataGridTextColumn Header="Date of Birth" Width="*" Binding="{Binding}"/>
+                    <DataGridTextColumn Header="Slot" Width="*" Binding="{Binding}"/>
                 </DataGrid.Columns>
+                
+                <!-- Sample Rows -->
+                <DataGrid.RowDefinitions>
+                    <DataGridRow>
+                        <DataGridCell Content="John Doe"/>
+                        <DataGridCell Content="30"/>
+                        <DataGridCell Content="04/05/1993"/>
+                        <DataGridCell Content="Morning"/>
+                    </DataGridRow>
+                    <DataGridRow>
+                        <DataGridCell Content="Jane Smith"/>
+                        <DataGridCell Content="25"/>
+                        <DataGridCell Content="08/15/1998"/>
+                        <DataGridCell Content="Evening"/>
+                    </DataGridRow>
+                    <DataGridRow>
+                        <DataGridCell Content="Emily Brown"/>
+                        <DataGridCell Content="40"/>
+                        <DataGridCell Content="12/03/1983"/>
+                        <DataGridCell Content="Morning"/>
+                    </DataGridRow>
+                </DataGrid.RowDefinitions>
             </DataGrid>
         </StackPanel>
     </Grid>

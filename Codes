@@ -59,3 +59,51 @@
         </StackPanel>
     </Grid>
 </UserControl>
+
+
+
+
+
+using System;
+using System.Windows;
+using System.Windows.Controls;
+
+public partial class PatientDashboardControl : UserControl
+{
+    private readonly PatientDashboardViewModel _viewModel;
+
+    public PatientDashboardControl()
+    {
+        InitializeComponent();
+        _viewModel = new PatientDashboardViewModel();
+        DataContext = _viewModel;
+
+        // Subscribe to ViewModel events
+        _viewModel.PatientRegistered += OnPatientRegistered;
+        _viewModel.FilterRecordsRequested += OnFilterRecordsRequested;
+    }
+
+    private void OnPatientRegistered(object sender, EventArgs e)
+    {
+        MessageBox.Show("Patient registered successfully.");
+        // Additional UI update logic if needed
+    }
+
+    private void OnFilterRecordsRequested(object sender, EventArgs e)
+    {
+        MessageBox.Show("Medical records filtered successfully.");
+        // Additional UI update logic if needed
+    }
+
+    // Button click handlers that trigger the ViewModel methods
+    private void RegisterPatientButton_Click(object sender, RoutedEventArgs e)
+    {
+        var newPatient = new Patient { Name = "John Doe", Age = 30, Gender = "Male", Contact = "1234567890" };
+        _viewModel.RegisterPatient(newPatient);  // This raises the PatientRegistered event
+    }
+
+    private void FilterRecordsButton_Click(object sender, RoutedEventArgs e)
+    {
+        _viewModel.RequestFilterRecords("DiagnosisFilter");  // This raises the FilterRecordsRequested event
+    }
+}

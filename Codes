@@ -64,6 +64,43 @@
 
 
 
+
+
+
+<UserControl x:Class="PatientAdmissionApp.PatientDashboardControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Margin="20">
+        <StackPanel>
+            <TextBlock Text="Patient Dashboard" FontSize="22" FontWeight="Bold" Margin="0,0,0,20"/>
+
+            <!-- Patients DataGrid -->
+            <DataGrid ItemsSource="{Binding Patients}" AutoGenerateColumns="False" Height="150">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                    <DataGridTextColumn Header="Age" Binding="{Binding Age}" />
+                    <DataGridTextColumn Header="Gender" Binding="{Binding Gender}" />
+                    <DataGridTextColumn Header="Contact" Binding="{Binding Contact}" />
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <!-- Medical Records DataGrid -->
+            <DataGrid ItemsSource="{Binding MedicalRecords}" AutoGenerateColumns="False" Height="200" Margin="0,20,0,0">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Date" Binding="{Binding Date}" />
+                    <DataGridTextColumn Header="Diagnosis" Binding="{Binding Diagnosis}" />
+                    <DataGridTextColumn Header="Prescription" Binding="{Binding Prescription}" />
+                    <DataGridTextColumn Header="Notes" Binding="{Binding Notes}" />
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <!-- Action Buttons -->
+            <Button Content="Register Patient" Click="RegisterPatientButton_Click" Width="150" Margin="0,10"/>
+            <Button Content="Filter Records" Click="FilterRecordsButton_Click" Width="150" Margin="0,10"/>
+        </StackPanel>
+    </Grid>
+</UserControl>
+
 using System;
 using System.Windows;
 using System.Windows.Controls;

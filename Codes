@@ -1,35 +1,147 @@
-using System;
-using System.Collections.ObjectModel;
+BaseViewModel.cs
+
+using System.ComponentModel;
 
 namespace PatientAdmissionApp
 {
-    public class PatientViewModel : IPatientViewModel
+    public class BaseViewModel : INotifyPropertyChanged
     {
-        private ObservableCollection<PatientModel> _patients;
+        public event PropertyChangedEventHandler PropertyChanged;
 
+        protected virtual void OnPropertyChanged(string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private object _currentView;
+        public object CurrentView
+        {
+            get { return _currentView; }
+            set { _currentView = value; OnPropertyChanged(nameof(CurrentView)); }
+        }
+    }
+}
+
+RelayCommand.cs
+
+Additionally, you need the RelayCommand implementation to handle ICommand:
+
+using System;
+using System.Windows.Input;
+
+namespace PatientAdmissionApp
+{
+    public class RelayCommand : ICommand
+    {
+        private readonly Action<object> _execute;
+        private readonly Predicate<object> _canExecute;
+
+        public event EventHandler CanExecuteChanged;
+
+        public RelayCommand(Action<object> execute, Predicate<object> canExecute = null)
+        {
+            _execute = execute ?? throw new ArgumentNullException(nameof(execute));
+            _canExecute = canExecute;
+        }
+
+        public bool CanExecute(object parameter)
+        {
+            return _canExecute == null || _canExecute(parameter);
+        }
+
+        public void Execute(object parameter)
+        {
+            _execute(parameter);
+        }
+
+        public void RaiseCanExecuteChanged()
+        {
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
+}
+
+
+
+
+using System.Collections.ObjectModel;
+using System.Windows.Input;
+
+namespace PatientAdmissionApp
+{
+    public class PatientViewModel : BaseViewModel
+    {
+        public ObservableCollection<PatientModel> Patients { get; set; } = new ObservableCollection<PatientModel>();
+
+        private PatientModel _newPatient;
+        public PatientModel NewPatient
+        {
+            get { return _newPatient; }
+            set { _newPatient = value; OnPropertyChanged(); }
+        }
+
+        private PatientModel _selectedPatient;
+        public PatientModel SelectedPatient
+        {
+            get { return _selectedPatient; }
+            set { _selectedPatient = value; OnPropertyChanged(); }
+        }
+
+        public ICommand RegisterPatientCommand { get; set; }
+        public ICommand SendUpdateCommand { get; set; }
+        public ICommand ShowRegistrationCommand { get; set; }
+        public ICommand ShowAppointmentCommand { get; set; }
+        public ICommand ShowDashboardCommand { get; set; }
+        public ICommand ExitCommand { get; set; }
+        
         public PatientViewModel()
         {
-            _patients = new ObservableCollection<PatientModel>();
+            NewPatient = new PatientModel();
+            RegisterPatientCommand = new RelayCommand(RegisterPatient);
+            SendUpdateCommand = new RelayCommand(SendUpdate);
+            ShowRegistrationCommand = new RelayCommand(ShowRegistration);
+            ShowAppointmentCommand = new RelayCommand(ShowAppointment);
+            ShowDashboardCommand = new RelayCommand(ShowDashboard);
+            ExitCommand = new RelayCommand(ExitApplication);
         }
 
-        // Property to get the observable collection of patients
-        public ObservableCollection<PatientModel> Patients => _patients;
-
-        // Event to notify when the patients list is updated
-        public event EventHandler PatientsUpdated;
-
-        // Method to register a new patient
-        public void RegisterPatient(PatientModel patient)
+        private void RegisterPatient()
         {
-            // Add the new patient to the collection
-            _patients.Add(patient);
-            OnPatientsUpdated(); // Raise the event to notify subscribers
+            Patients.Add(new PatientModel
+            {
+                Name = NewPatient.Name,
+                Age = NewPatient.Age,
+                DateofBirth = NewPatient.DateofBirth,
+                Address = NewPatient.Address,
+                Slot = NewPatient.Slot,
+                BookingDate = NewPatient.BookingDate
+            });
+            NewPatient = new PatientModel(); // Reset for new entry
         }
 
-        // Method to raise the PatientsUpdated event
-        protected virtual void OnPatientsUpdated()
+        private void SendUpdate()
         {
-            PatientsUpdated?.Invoke(this, EventArgs.Empty);
+            // Logic to send update
+        }
+
+        private void ShowRegistration()
+        {
+            CurrentView = new PatientRegistrationControl();
+        }
+
+        private void ShowAppointment()
+        {
+            CurrentView = new AppointmentControl { DataContext = this };
+        }
+
+        private void ShowDashboard()
+        {
+            CurrentView = new PatientDashboardControl { DataContext = this };
+        }
+
+        private void ExitApplication()
+        {
+            Application.Current.Shutdown();
         }
     }
 }

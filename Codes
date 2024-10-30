@@ -12,17 +12,21 @@ namespace PatientAdmissionApp
             _patients = new ObservableCollection<PatientModel>();
         }
 
+        // Property to get the observable collection of patients
         public ObservableCollection<PatientModel> Patients => _patients;
 
+        // Event to notify when the patients list is updated
         public event EventHandler PatientsUpdated;
 
+        // Method to register a new patient
         public void RegisterPatient(PatientModel patient)
         {
             // Add the new patient to the collection
             _patients.Add(patient);
-            OnPatientsUpdated();
+            OnPatientsUpdated(); // Raise the event to notify subscribers
         }
 
+        // Method to raise the PatientsUpdated event
         protected virtual void OnPatientsUpdated()
         {
             PatientsUpdated?.Invoke(this, EventArgs.Empty);

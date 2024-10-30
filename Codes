@@ -132,6 +132,43 @@ public partial class PatientDashboardControl : UserControl
         // Additional UI update logic if needed
     }
 
+
+
+
+
+
+
+using System;
+using System.Collections.ObjectModel;
+
+namespace PatientAdmissionApp
+{
+    public class PatientViewModel : IPatientViewModel
+    {
+        private ObservableCollection<PatientModel> _patients;
+
+        public PatientViewModel()
+        {
+            _patients = new ObservableCollection<PatientModel>();
+        }
+
+        public ObservableCollection<PatientModel> Patients => _patients;
+
+        public event EventHandler PatientsUpdated;
+
+        public void RegisterPatient(PatientModel patient)
+        {
+            // Add the new patient to the collection
+            _patients.Add(patient);
+            OnPatientsUpdated();
+        }
+
+        protected virtual void OnPatientsUpdated()
+        {
+            PatientsUpdated?.Invoke(this, EventArgs.Empty);
+        }
+    }
+}
     // Button click handlers that trigger the ViewModel methods
     private void RegisterPatientButton_Click(object sender, RoutedEventArgs e)
     {
